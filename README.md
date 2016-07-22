@@ -13,10 +13,10 @@ Usage Examples:
 
 Resize Options:
 
-    | Option | Description |
-	| --- | --- |
-	| `150x200` | `width`x`height` |
-    | `150x200-c` | `width`x`height`-`crop` |
-    | `150x200-r` | `width`x`height`-`maintain_ratio` |
-    | `150x200-c-r` | `width`x`height`-`crop`-`maintain_ratio` |
+Option | Description
+--- | ---
+`150x200` | `width`x`height`
+`150x200-c` | `width`x`height`-`crop`
+`150x200-r` | `width`x`height`-`maintain_ratio`
+`150x200-c-r` | `width`x`height`-`crop`-`maintain_ratio`
 
