@@ -16,7 +16,7 @@ Usage Examples:
 
 Resize Options:
 
-Option | Description
+Example | Description
 --- | ---
 `150x200` | `width`x`height`
 `150x200-c` | `width`x`height`-`crop`
