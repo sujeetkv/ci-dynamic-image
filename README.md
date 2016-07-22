@@ -3,6 +3,8 @@ CodeIgniter Dynamic Image Library
 
 -by Sujeet <sujeetkv90@gmail.com>
 
+*Uses effective Browser-Server caching to overcome repeated image processing.*
+
 Usage Examples:
 
 	<img src="app_images/index/assets/images/image.jpg" />
