@@ -1,5 +1,6 @@
 # ci-dynamic-image
-CodeIgniter Dynamic Image Library
+## CodeIgniter Dynamic Image Library
+Resize and Crop images on-the-fly.
 
 -by Sujeet <sujeetkv90@gmail.com>
 
