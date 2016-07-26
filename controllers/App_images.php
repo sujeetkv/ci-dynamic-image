@@ -3,7 +3,7 @@
 class App_images extends CI_Controller
 {	
 	public function index(){
-		// load library
+		// load library with config
 		$this->load->library('dynamic_image', array(
 			'cache_dir' => APPPATH.'cache/image_cache',
 			'create_sub_dir' => true,
