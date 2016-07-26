@@ -13,7 +13,7 @@ class Dynamic_image
 	protected $base_path = './';
 	protected $cache_dir = 'image_cache';
 	protected $create_sub_dir = true;
-	protected $thumb_quality = '100%';
+	protected $image_quality = '100%';
 	protected $qstr_mode = false;
 	
 	protected $wm_info = array(
@@ -48,7 +48,7 @@ class Dynamic_image
 		
 		isset($params['cache_dir']) and $this->cache_dir = trim(strval($params['cache_dir']),'/\\');
 		isset($params['create_sub_dir']) and $this->create_sub_dir = (bool) $params['create_sub_dir'];
-		isset($params['thumb_quality']) and $this->thumb_quality = $params['thumb_quality'];
+		isset($params['image_quality']) and $this->image_quality = $params['image_quality'];
 		isset($params['qstr_mode']) and $this->qstr_mode = (bool) $params['qstr_mode'];
 	}
 	
@@ -175,7 +175,7 @@ class Dynamic_image
 				$config = array(
 					'source_image' => $this->base_path . $img_path,
 					'new_image' => $new_img_path,
-					'quality' => $this->thumb_quality,
+					'quality' => $this->image_quality,
 					'width' => $w,
 					'height' => $h,
 					'maintain_ratio' => $with_ratio
@@ -234,7 +234,7 @@ class Dynamic_image
 		}else{
 			$wm_config = array(
 				'source_image'		=> $image_path,
-				'quality'			=> $this->thumb_quality,
+				'quality'			=> $this->image_quality,
 				'wm_text'			=> $this->wm_info['text'],
 				'wm_type'			=> 'text',
 				'wm_font_path'		=> $this->base_path . $this->wm_info['font_path'],
