@@ -6,7 +6,7 @@ class App_images extends CI_Controller
     public function index() {
         // load library and initialize with config
         $this->load->library('dynamic_image', array(
-            'cache_dir' => APPPATH . 'cache/image_cache',
+            'cache_dir' => 'application/cache/image_cache', // relative to FCPATH (front controller path)
             'create_sub_dir' => true,
             'image_quality' => '100%',
             'qstr_mode' => false
