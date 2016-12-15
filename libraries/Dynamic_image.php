@@ -17,6 +17,9 @@ class Dynamic_image
     protected $image_quality = '100%';
     protected $qstr_mode = false;
     
+    protected $browser_cache_time = 31536000; /* in seconds */
+    protected $browser_cache_type = 'public'; /* public or private */
+    
     protected $wm_info = array(
         'text' => '',
         'color' => '000000',
@@ -51,6 +54,8 @@ class Dynamic_image
         isset($params['create_sub_dir']) and $this->create_sub_dir = (bool) $params['create_sub_dir'];
         isset($params['image_quality']) and $this->image_quality = $params['image_quality'];
         isset($params['qstr_mode']) and $this->qstr_mode = (bool) $params['qstr_mode'];
+        isset($params['browser_cache_time']) and $this->browser_cache_time = $params['browser_cache_time'];
+        isset($params['browser_cache_type']) and $this->browser_cache_type = $params['browser_cache_type'];
     }
     
     /**
@@ -263,6 +268,13 @@ class Dynamic_image
     }
     
     protected function _doConditionalGet($etag, $last_modified) {
+        if ($this->browser_cache_time > 0) {
+            header_remove('Expires');
+            header('Cache-Control: ' . $this->browser_cache_type . ', max-age=' . $this->browser_cache_time);
+        } else {
+            header('Cache-Control: no-cache, no-store');
+        }
+        header_remove('Pragma');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s T', $last_modified));
         header('ETag: "' . $etag . '"');
         

@@ -9,7 +9,9 @@ class App_images extends CI_Controller
             'cache_dir' => 'application/cache/image_cache', // relative to FCPATH (front controller path)
             'create_sub_dir' => true,
             'image_quality' => '100%',
-            'qstr_mode' => false
+            'qstr_mode' => false,
+            'browser_cache_time' => 31536000, // in seconds
+            'browser_cache_type' => 'public', // public or private
         ));
 
         // set watermark
