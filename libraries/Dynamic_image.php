@@ -11,9 +11,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dynamic_image
 {
     protected $CI;
-    protected $base_path = './';
-    protected $cache_dir = 'image_cache';
-    protected $create_sub_dir = true;
+    
+    protected $root_path;
+    protected $app_path;
+    protected $system_path;
+    
+    protected $cache_dir = 'cache';
+    protected $create_cache_tree = true;
     protected $image_quality = '100%';
     protected $qstr_mode = false;
     
@@ -24,7 +28,7 @@ class Dynamic_image
         'text' => '',
         'color' => '000000',
         'font_size' => 12,
-        'font_path' => 'system/fonts/texb.ttf',
+        'font_path' => 'fonts/texb.ttf',
         'padding' => 4,
         'smart_wm' => false,
         'custom_config' => array()
@@ -32,7 +36,8 @@ class Dynamic_image
     
     /**
      * Initialize library
-     * @param	array	$config
+     * 
+     * @param array $config
      */
     public function __construct($config = array()) {
         $this->CI = &get_instance();
@@ -41,17 +46,16 @@ class Dynamic_image
     
     /**
      * Set config
-     * @param	array	$params
+     * 
+     * @param array $params
      */
     public function initialize($params) {
-        if (isset($params['base_path'])) {
-            $this->base_path = $params['base_path'];
-        } elseif (defined('FCPATH')) {
-            $this->base_path = str_replace('\\', '/', FCPATH);
-        }
+        $this->root_path = rtrim(str_replace('\\', '/', FCPATH), '/\\') . '/';
+        $this->app_path = rtrim(str_replace('\\', '/', APPPATH), '/\\') . '/';
+        $this->system_path = rtrim(str_replace('\\', '/', BASEPATH), '/\\') . '/';
         
         isset($params['cache_dir']) and $this->cache_dir = trim(strval($params['cache_dir']), '/\\');
-        isset($params['create_sub_dir']) and $this->create_sub_dir = (bool) $params['create_sub_dir'];
+        isset($params['create_cache_tree']) and $this->create_cache_tree = (bool) $params['create_cache_tree'];
         isset($params['image_quality']) and $this->image_quality = $params['image_quality'];
         isset($params['qstr_mode']) and $this->qstr_mode = (bool) $params['qstr_mode'];
         isset($params['browser_cache_time']) and $this->browser_cache_time = (int) $params['browser_cache_time'];
@@ -60,7 +64,8 @@ class Dynamic_image
     
     /**
      * Set watermark
-     * @param	array	$config
+     * 
+     * @param array $config
      */
     public function setWaterMark($config) {
         if (is_array($config)) {
@@ -74,19 +79,19 @@ class Dynamic_image
     
     /**
      * Render image
-     * @param	string	$image_path (optional)
+     * 
+     * @param string $image_path (optional)
      */
     public function render($image_path = '') {
-        $img_path = NULL;
-        $width = NULL;
-        $height = NULL;
+        $img_path = null;
+        $width = null;
+        $height = null;
         $with_ratio = false;
         $crop = false;
         
         $_directory = $this->CI->router->directory;
         $_class = $this->CI->router->class;
         $_method = $this->CI->router->method;
-        $namespace = $_directory . $_class . '/' . $_method . '/';
         
         if (!empty($image_path)) {
             $path_array = explode('/', ltrim($image_path, '/'));
@@ -122,11 +127,11 @@ class Dynamic_image
             return;
         }
         
-        if (!is_file($this->base_path . $img_path)) {
+        if (!is_file($this->root_path . $img_path)) {
             show_404();
             return;
         } else {
-            $img_info = getimagesize($this->base_path . $img_path);
+            $img_info = getimagesize($this->root_path . $img_path);
             $mime = (isset($img_info['mime'])) ? $img_info['mime'] : '';
             
             if (substr($mime, 0, 6) != 'image/') {
@@ -138,13 +143,15 @@ class Dynamic_image
             $width and $w = $width;
             $height and $h = $height;
             
-            $cache_path = $this->base_path . $this->cache_dir . '/';
+            $cache_path = $this->app_path . $this->cache_dir . '/';
             if (empty($this->cache_dir) or ! is_dir($cache_path)) {
                 show_error('Error: image cache directory not configured.', 500);
                 return;
             }
-            
-            if ($this->create_sub_dir) {
+                        
+            if ($this->create_cache_tree) {
+                $namespace = 'image_cache/' . $_directory . $_class . '/' . $_method . '/';
+                
                 if (!$this->_createDirectory($namespace, $cache_path)) {
                     return;
                 }
@@ -168,13 +175,18 @@ class Dynamic_image
                 
                 $new_img_path = $cache_path . $new_img_dir . '/' . $new_img_name;
             } else {
+                $namespace = $_directory . $_class . '/' . $_method . '/';
+                if (!$this->_createDirectory('image_cache', $cache_path)) {
+                    return;
+                }
+                $cache_path .= 'image_cache/';
                 $size_dir = $w . 'x' . $h . ($crop ? '-c' : '') . ($with_ratio ? '-r' : '');
                 $new_img_name = $size_dir . '-' . str_replace(array('/', '\\'), '-', $namespace . $img_path);
                 $new_img_path = $cache_path . $new_img_name;
             }
             
             if (file_exists($new_img_path)) {
-                $img_modified = $this->_fileTime($this->base_path . $img_path);
+                $img_modified = $this->_fileTime($this->root_path . $img_path);
                 $new_img_modified = $this->_fileTime($new_img_path);
                 $process_image = ($img_modified > $new_img_modified) ? true : false;
             } else {
@@ -183,7 +195,7 @@ class Dynamic_image
             
             if ($process_image) {
                 $config = array(
-                    'source_image' => $this->base_path . $img_path,
+                    'source_image' => $this->root_path . $img_path,
                     'new_image' => $new_img_path,
                     'quality' => $this->image_quality,
                     'width' => $w,
@@ -235,6 +247,13 @@ class Dynamic_image
         }
     }
     
+    /**
+     * Applies watermark on image
+     * 
+     * @param string $image_path
+     * @param int $image_hieght
+     * @param string $mime
+     */
     protected function _processWaterMark($image_path, $image_hieght, $mime) {
         $h_limit = ($this->wm_info['font_size'] + $this->wm_info['padding'] * 2) * 2;
         $invalid_mime = ($this->wm_info['smart_wm'] and in_array($mime, array('image/png', 'image/x-png', 'image/gif')));
@@ -247,7 +266,7 @@ class Dynamic_image
                 'quality' => $this->image_quality,
                 'wm_text' => $this->wm_info['text'],
                 'wm_type' => 'text',
-                'wm_font_path' => $this->base_path . $this->wm_info['font_path'],
+                'wm_font_path' => $this->system_path . $this->wm_info['font_path'],
                 'wm_font_size' => strval($this->wm_info['font_size']),
                 'wm_font_color' => $this->wm_info['color'],
                 'wm_vrt_alignment' => 'top',
@@ -267,6 +286,12 @@ class Dynamic_image
         }
     }
     
+    /**
+     * Applies conditional headers
+     * 
+     * @param string $etag
+     * @param int $last_modified
+     */
     protected function _doConditionalGet($etag, $last_modified) {
         if ($this->browser_cache_time > 0) {
             header('Cache-Control: ' . $this->browser_cache_type . ', max-age=' . $this->browser_cache_time);
@@ -303,6 +328,12 @@ class Dynamic_image
         return true;
     }
     
+    /**
+     * Create directories recursively
+     * 
+     * @param string $directory_path
+     * @param string $base_path
+     */
     protected function _createDirectory($directory_path, $base_path) {
         if (!is_dir($base_path . $directory_path)) {
             $tmp_path = '';
@@ -320,6 +351,11 @@ class Dynamic_image
         return true;
     }
     
+    /**
+     * Get file modified time
+     * 
+     * @param string $file_path
+     */
     protected function _fileTime($file_path) {
         return max(filemtime($file_path), filectime($file_path));
     }

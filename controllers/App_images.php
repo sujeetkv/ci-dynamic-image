@@ -6,8 +6,8 @@ class App_images extends CI_Controller
     public function index() {
         // load library and initialize with config
         $this->load->library('dynamic_image', array(
-            'cache_dir' => 'application/cache/image_cache', // relative to FCPATH (front controller path)
-            'create_sub_dir' => true,
+            'cache_dir' => 'cache',// relative to APPPATH (application directory path)
+            'create_cache_tree' => true,
             'image_quality' => '100%',
             'qstr_mode' => false,
             'browser_cache_time' => 31536000, // in seconds
@@ -18,7 +18,7 @@ class App_images extends CI_Controller
         $this->dynamic_image->setWaterMark(array(
             'text' => 'Sujeet',
             'color' => '0066FF',
-            'font_path' => 'system/fonts/Bullpen3D.ttf',
+            'font_path' => 'fonts/Bullpen3D.ttf',// relative to BASEPATH (system directory path)
             'smart_wm' => true
         ));
 
