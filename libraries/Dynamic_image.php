@@ -180,6 +180,7 @@ class Dynamic_image
                     return;
                 }
                 $cache_path .= 'image_cache/';
+                
                 $size_dir = $w . 'x' . $h . ($crop ? '-c' : '') . ($with_ratio ? '-r' : '');
                 $new_img_name = $size_dir . '-' . str_replace(array('/', '\\'), '-', $namespace . $img_path);
                 $new_img_path = $cache_path . $new_img_name;
