@@ -8,19 +8,23 @@ Resize and Crop images on-the-fly.
 
 Usage Examples:
 
-    With Url-Rewrite (Recommended):
-    <img src="app_images/index/assets/images/image.jpg" />
-    <img src="app_images/index/150x200/assets/images/image.jpg" />
-    <img src="app_images/index/150x200-c/assets/images/image.jpg" />
-    <img src="app_images/index/150x200-r/assets/images/image.jpg" />
-    <img src="app_images/index/150x200-c-r/assets/images/image.jpg" />
-    
-    Without Url-Rewrite:
-    <img src="index.php/app_images/index/assets/images/image.jpg" />
-    <img src="index.php/app_images/index/150x200/assets/images/image.jpg" />
-    <img src="index.php/app_images/index/150x200-c/assets/images/image.jpg" />
-    <img src="index.php/app_images/index/150x200-r/assets/images/image.jpg" />
-    <img src="index.php/app_images/index/150x200-c-r/assets/images/image.jpg" />
+With Url-Rewrite (Recommended):
+```html
+<img src="app_images/index/assets/images/image.jpg" />
+<img src="app_images/index/150x200/assets/images/image.jpg" />
+<img src="app_images/index/150x200-c/assets/images/image.jpg" />
+<img src="app_images/index/150x200-r/assets/images/image.jpg" />
+<img src="app_images/index/150x200-c-r/assets/images/image.jpg" />
+```
+
+Without Url-Rewrite:
+```html
+<img src="index.php/app_images/index/assets/images/image.jpg" />
+<img src="index.php/app_images/index/150x200/assets/images/image.jpg" />
+<img src="index.php/app_images/index/150x200-c/assets/images/image.jpg" />
+<img src="index.php/app_images/index/150x200-r/assets/images/image.jpg" />
+<img src="index.php/app_images/index/150x200-c-r/assets/images/image.jpg" />
+```
 
 Resize Options:
 
